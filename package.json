@@ -1,18 +1,16 @@
 {
-  "name": "electron-quick-start",
+  "name": "file-download",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "POC file transfer",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/night5415/file-transfer.git",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "http",
+    "poc"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
@@ -20,9 +18,6 @@
     "electron": "^21.0.1"
   },
   "dependencies": {
-    "http-server": "^14.1.1",
-    "localtunnel": "^2.0.2",
-    "qrcode": "^1.5.1",
-    "static-server": "^2.2.1"
+    "qrcode": "^1.5.1"
   }
 }

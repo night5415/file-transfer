@@ -1,4 +1,88 @@
-body, html {
-    margin: 0;
-    padding: 0;
+:root {
+  --primary: #000;
+  --secondary: #1e90ff;
+  --background: #ffffff;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+}
+
+#debug {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  color: red;
+}
+
+#file-list {
+  margin: 5px auto;
+  padding: 5px;
+  max-width: 768px;
+}
+
+#file-list div {
+  cursor: pointer;
+  border: 2px solid var(--primary);
+  background-color: var(--background);
+  box-shadow: 5px 5px 5px rgb(177, 173, 173);
+  color: #000;
+  margin: 20px 0;
+  padding: 15px 20px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.sub-container {
+  display: block;
+  padding-left: 30px;
+  overflow: hidden;
+}
+
+#file-list div[data-isfile="false"]::before {
+  padding-right: 15px;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000000' viewBox='0 0 32 32' width='32px' height='32px'%3E%3Cpath d='M 6 3 L 6 29 L 26 29 L 26 15.4375 L 27.71875 13.71875 L 28 13.40625 L 28 3 Z M 8 5 L 22 5 L 22 13.40625 L 22.28125 13.71875 L 24 15.4375 L 24 27 L 8 27 Z M 24 5 L 26 5 L 26 12.5625 L 25 13.5625 L 24 12.5625 Z'/%3E%3C/svg%3E");
+}
+
+#file-list div[data-isfile="true"]::before {
+  padding-right: 15px;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000000' viewBox='0 0 32 32' width='32px' height='32px'%3E%3Cpath d='M 6 3 L 6 29 L 26 29 L 26 9.59375 L 25.71875 9.28125 L 19.71875 3.28125 L 19.40625 3 Z M 8 5 L 18 5 L 18 11 L 24 11 L 24 27 L 8 27 Z M 20 6.4375 L 22.5625 9 L 20 9 Z'/%3E%3C/svg%3E");
+}
+
+#file-list div[data-isfile="true"][data-clicked="true"]::after {
+  margin-left: 0.5rem;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' id='svg' width='16' height='16' viewBox='0, 0, 400,400'%3E%3Cg id='svgg'%3E%3Cpath id='path0' d='M109.056 11.675 C 96.356 19.420,87.419 31.873,82.300 48.959 C 75.617 71.267,71.267 75.617,48.959 82.300 C 5.433 95.341,-10.243 134.346,10.533 177.913 C 20.409 198.625,20.409 201.375,10.533 222.087 C -10.243 265.654,5.433 304.659,48.959 317.700 C 71.267 324.383,75.617 328.733,82.300 351.041 C 95.341 394.567,134.346 410.243,177.913 389.467 C 198.625 379.591,201.375 379.591,222.087 389.467 C 266.462 410.629,301.861 397.689,315.993 355.141 C 324.832 328.529,328.735 324.383,351.313 317.618 C 394.556 304.662,410.184 265.531,389.467 222.087 C 379.591 201.375,379.591 198.625,389.467 177.913 C 410.184 134.469,394.556 95.338,351.313 82.382 C 328.735 75.617,324.832 71.471,315.993 44.859 C 301.861 2.311,266.462 -10.629,222.087 10.533 C 201.375 20.409,198.625 20.409,177.913 10.533 C 149.505 -3.014,132.687 -2.735,109.056 11.675 M298.767 145.562 L 312.213 159.875 243.582 228.293 L 174.951 296.710 133.060 254.819 L 91.169 212.928 106.162 196.968 L 121.156 181.009 148.186 207.536 L 175.216 234.064 226.623 182.657 C 284.859 124.422,280.845 126.485,298.767 145.562 ' stroke='none' fill='rgb(0, 182, 121)' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+#file-list div[data-isfile="false"][data-clicked="true"]::before {
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000000' viewBox='0 0 32 32' width='32px' height='32px'%3E%3Cpath d='M 5 3 L 5 27.8125 L 5.78125 27.96875 L 17.78125 30.46875 L 19 30.71875 L 19 28 L 25 28 L 25 15.4375 L 26.71875 13.71875 L 27 13.40625 L 27 3 Z M 14.125 5 L 25 5 L 25 12.5625 L 23.28125 14.28125 L 23 14.59375 L 23 26 L 19 26 L 19 17.09375 L 18.71875 16.78125 L 17 15.0625 L 17 5.71875 Z M 7 5.28125 L 15 7.28125 L 15 15.90625 L 15.28125 16.21875 L 17 17.9375 L 17 28.28125 L 7 26.1875 Z'/%3E%3C/svg%3E");
+}
+
+.ripple {
+  height: 5px;
+  width: 5px;
+  background-color: var(--secondary);
+  opacity: 0;
+  border-radius: 50%;
+  animation: ripple 2s;
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(2, 3);
+    opacity: 0.8;
+  }
+  100% {
+   transform: scale(100, 100);
+    opacity: 0;
+  }
 }
