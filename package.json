@@ -15,7 +15,8 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^21.0.1"
+    "electron": "^21.0.1",
+    "electron-icon-builder": "^2.0.1"
   },
   "dependencies": {
     "qrcode": "^1.5.1"

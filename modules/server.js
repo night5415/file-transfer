@@ -21,8 +21,16 @@ const staticServe = function (req, res) {
     case "folder":
       folder(res, req);
       break;
+    case "log":
+      log(res, req);
+      res.end("success");
+      break;
+    case "file-upload":
+      upload(res, req);
+      break;
     default:
-      res.end("nothing");
+      res.end("404");
+      break;
   }
 };
 
@@ -120,6 +128,29 @@ const getFolders = (nPath) => {
       res(fileObjs);
     });
   });
+};
+
+const log = (_, req) => {
+  let logMessage = "";
+
+  req.on("data", (data) => {
+    logMessage += data;
+  });
+
+  req.on("end", () => fs.writeFileSync("logger.txt", logMessage));
+};
+
+const upload = (res, req) => {
+  const requestBody = [];
+  req.on("data", (chunks) => {
+    requestBody.push(chunks);
+  });
+  req.on("end", () => {
+    const parsedData = Buffer.concat(requestBody).toString();
+    const username = parsedData.split("=")[1];
+    fs.writeFileSync("username.txt", parsedData);
+  });
+  res.end("");
 };
 
 module.exports = { staticServe };

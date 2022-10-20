@@ -1,6 +1,8 @@
 const dataAttUrl = "data-file",
   dataAttClicked = "data-clicked",
-  container = document.getElementById("file-list");
+  container = document.getElementById("file-list"),
+  dwnLoad = document.getElementById("file-download"),
+  input = document.getElementById("test");
 
 const onFileClick = (event) => {
   const { target, clientX, clientY } = event,
@@ -9,7 +11,6 @@ const onFileClick = (event) => {
     clicked = target.getAttribute(dataAttClicked) ?? false;
 
   if (clicked) {
-    console.log(`file has been clicked: ${clicked}`);
     alert("file has already been downloaded");
     return;
   }
@@ -29,6 +30,7 @@ const onFileClick = (event) => {
     })
     .catch((e) => {
       console.error(e);
+      logger(e);
     });
 };
 
@@ -41,9 +43,12 @@ const onFolderClick = (event) => {
   createRipple(target, clientX - x, clientY - y);
 
   if (clicked) {
-    console.log(`folder has been clicked: ${clicked}`);
+    const { nextElementSibling } = target;
     target.removeAttribute(dataAttClicked);
-    target.nextElementSibling?.remove();
+    nextElementSibling.style.maxHeight = 0;
+    setTimeout(() => {
+      nextElementSibling.remove();
+    }, 2000);
     return;
   }
 
@@ -58,6 +63,7 @@ const onFolderClick = (event) => {
           const { name, url, isFile } = data,
             child = document.createElement("div"),
             clickBasedOnType = isFile ? onFileClick : onFolderClick;
+
           child.innerText = name;
           child.setAttribute(dataAttUrl, url);
           child.setAttribute("data-isfile", data.isFile);
@@ -65,13 +71,16 @@ const onFolderClick = (event) => {
           subContainer.appendChild(child);
         });
         target.parentNode.insertBefore(subContainer, target.nextSibling);
+        setTimeout(() => {
+          subContainer.style.maxHeight = "100vh";
+        }, 20);
       } else {
         alert("nothing found");
       }
     })
     .catch((e) => {
       alert("Fetch fail");
-      console.error(e);
+      logger(e);
     });
 };
 
@@ -102,8 +111,6 @@ const onApiCall = () => {
 };
 
 const createRipple = (target, x, y) => {
-  debug(`${x}-${y}`);
-
   const ripple = document.createElement("span");
   ripple.style.left = `${x}px`;
   ripple.style.top = `${y}px`;
@@ -116,12 +123,57 @@ const createRipple = (target, x, y) => {
   }, 2000);
 };
 
-const debug = (info) => {
-  const infoContainer = document.getElementById("debug");
-  infoContainer.innerHTML = info;
+const detectSwipe = () => {
+  let touchStartTime,
+    touchEndTime,
+    clientX,
+    clientY,
+    app = document.getElementById("app");
+
+  app.addEventListener("touchstart", ({ touches }) => {
+    const [touch] = touches;
+    touchStartTime = Date.now();
+
+    clientY = touch.clientY;
+    clientX = touch.clientX;
+  });
+
+  app.addEventListener("touchend", (e) => {
+    touchEndTime = Date.now();
+
+    const endClientX = e.changedTouches[0].clientX;
+
+    if (touchEndTime - touchStartTime <= 200) {
+    } else if (clientX - endClientX <= -100) {
+      dwnLoad.setAttribute("data-hidden", true);
+      container.setAttribute("data-hidden", false);
+      console.log("swipe right");
+    } else {
+      container.setAttribute("data-hidden", true);
+      dwnLoad.setAttribute("data-hidden", false);
+      console.log("swipe left");
+    }
+  });
+};
+
+const setupFileDownload = () => {
+  input.addEventListener("change", async ({ target }) => {
+    const { files } = target,
+      formData = new FormData();
+
+    formData.append("file", files[0]);
+
+    const response = await fetch("file-upload", {
+      method: "POST",
+      body: formData,
+    });
+    console.dir(response);
+  });
 };
 
 onApiCall();
+detectSwipe();
+setupFileDownload();
 
 if ("serviceWorker" in navigator) {
   try {
@@ -137,3 +189,7 @@ if ("serviceWorker" in navigator) {
     console.error(`Registration failed with ${error}`);
   }
 }
+
+const logger = (message) => {
+  fetch(`log`, { method: "POST", body: JSON.stringify(message) });
+};
