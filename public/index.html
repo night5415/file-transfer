@@ -4,19 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="color-scheme" content="light dark" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="public/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="public/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="public/index.css" />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.glitch.com/49d34dc6-8fbd-46bb-8221-b99ffd36f1af%2Ftouchicon-180.png?v=1566411949736"
+    />
     <script type="module" src="public/index.js"></script>
     <title>File Download</title>
   </head>
   <body>
     <div id="app">
       <div class="container">
-        <div data-hidden="false" id="file-list">
-            <input type="file" name="test" id="test">
+        <div data-hidden="false" id="file-list"></div>
+        <div data-hidden="true" id="file-download">
+          <label class="file-download-input" for="file-download-input">
+            Click to Upload
+            <input
+            multiple
+              type="file"
+              name="file-download-input"
+              id="file-download-input"
+          /></label>
+          <ul></ul>
         </div>
-        <div data-hidden="true" id="file-download"></div>
       </div>
-    </div> 
+    </div>
   </body>
 </html>

@@ -1,0 +1,41 @@
+{
+    "claimId": 19688498,
+    "adjudicationDate": "2022-05-08T00:00:00.0000000Z",
+    "sourcePaidClaimId": 18834213,
+    "adjustments": [
+        {
+            "id": 155051,
+            "adjustmentGroup": "OA",
+            "adjustmentReason": "96 ",
+            "adjustmentAmount": -40
+        },
+        {
+            "id": 155052,
+            "adjustmentGroup": "PR",
+            "adjustmentReason": "96 ",
+            "adjustmentAmount": 40
+        }
+    ],
+    "services": [
+        {
+            "claimEntryItemId": 56176864,
+            "paidAmount": 20,
+            "chargedAmount": 40,
+            "unitsPaid": 1,
+            "adjustments": [
+                {
+                    "adjustmentGroup": "PR",
+                    "adjustmentReason": "1  ",
+                    "adjustmentAmount": 20,
+                    "adjustmentQty": "1    "
+                },
+                {
+                    "adjustmentGroup": "CO",
+                    "adjustmentReason": "45 ",
+                    "adjustmentAmount": -10,
+                    "adjustmentQty": "1    "
+                }
+            ]
+        }
+    ]
+}

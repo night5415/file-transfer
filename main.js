@@ -49,28 +49,28 @@ app.on("window-all-closed", function () {
 
 const setupWebServer = () => http.createServer(staticServe).listen(port);
 
-const progressBar = (win) => {
-  const INCREMENT = 0.03;
-  const INTERVAL_DELAY = 100; // ms
+// const progressBar = (win) => {
+//   const INCREMENT = 0.03;
+//   const INTERVAL_DELAY = 100; // ms
 
-  let c = 0;
-  progressInterval = setInterval(() => {
-    // update progress bar to next value
-    // values between 0 and 1 will show progress, >1 will show indeterminate or stick at 100%
-    win?.setProgressBar(c);
+//   let c = 0;
+//   progressInterval = setInterval(() => {
+//     // update progress bar to next value
+//     // values between 0 and 1 will show progress, >1 will show indeterminate or stick at 100%
+//     win?.setProgressBar(c);
 
-    // increment or reset progress bar
-    if (c < 2) {
-      c += INCREMENT;
-    } else {
-      c = -INCREMENT * 5; // reset to a bit less than 0 to show reset state
-    }
-  }, INTERVAL_DELAY);
-};
+//     // increment or reset progress bar
+//     if (c < 2) {
+//       c += INCREMENT;
+//     } else {
+//       c = -INCREMENT * 5; // reset to a bit less than 0 to show reset state
+//     }
+//   }, INTERVAL_DELAY);
+// };
 
 const systemTray = () => {
   const icon = nativeImage.createFromDataURL(logo),
-  tray = new Tray(icon);
+    tray = new Tray(icon);
 
   const contextMenu = Menu.buildFromTemplate([
     { label: "Item1", type: "radio" },
@@ -87,6 +87,9 @@ function createQrCode() {
   return new Promise((res, rej) => {
     QRCode.toDataURL(
       `http://${os.hostname()}.local:${port}`,
+      {
+        scale: 10,
+      },
       function (err, code) {
         if (err) rej(err);
 

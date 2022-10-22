@@ -1,8 +1,9 @@
 const dataAttUrl = "data-file",
   dataAttClicked = "data-clicked",
+  app = document.getElementById("app"),
   container = document.getElementById("file-list"),
   dwnLoad = document.getElementById("file-download"),
-  input = document.getElementById("test");
+  input = document.getElementById("file-download-input");
 
 const onFileClick = (event) => {
   const { target, clientX, clientY } = event,
@@ -124,11 +125,7 @@ const createRipple = (target, x, y) => {
 };
 
 const detectSwipe = () => {
-  let touchStartTime,
-    touchEndTime,
-    clientX,
-    clientY,
-    app = document.getElementById("app");
+  let touchStartTime, clientX, clientY;
 
   app.addEventListener("touchstart", ({ touches }) => {
     const [touch] = touches;
@@ -138,21 +135,20 @@ const detectSwipe = () => {
     clientX = touch.clientX;
   });
 
-  app.addEventListener("touchend", (e) => {
-    touchEndTime = Date.now();
+  app.addEventListener("touchend", ({ changedTouches }) => {
+    const [touch] = changedTouches,
+      touchEndTime = Date.now(),
+      diffX = clientX - touch.clientX,
+      diffY = Math.abs(clientY - touch.clientY),
+      timeDiff = touchEndTime - touchStartTime,
+      swipeLeft = diffX > 0;
 
-    const endClientX = e.changedTouches[0].clientX;
-
-    if (touchEndTime - touchStartTime <= 200) {
-    } else if (clientX - endClientX <= -100) {
-      dwnLoad.setAttribute("data-hidden", true);
-      container.setAttribute("data-hidden", false);
-      console.log("swipe right");
-    } else {
-      container.setAttribute("data-hidden", true);
-      dwnLoad.setAttribute("data-hidden", false);
-      console.log("swipe left");
+    if (diffY > 50 || timeDiff < 200) {
+      return;
     }
+
+    container.setAttribute("data-hidden", swipeLeft);
+    dwnLoad.setAttribute("data-hidden", !swipeLeft);
   });
 };
 
@@ -160,14 +156,21 @@ const setupFileDownload = () => {
   input.addEventListener("change", async ({ target }) => {
     const { files } = target,
       formData = new FormData();
-
-    formData.append("file", files[0]);
+    const arr = Array.from(files);
+    arr.forEach((file) => formData.append("file", file));
 
     const response = await fetch("file-upload", {
       method: "POST",
       body: formData,
     });
-    console.dir(response);
+    const { files: returned } = await response.json();
+    const [ul] = document.getElementsByTagName("ul");
+    [...returned].forEach((f) => {
+      const li = document.createElement("li");
+      li.innerText = f.originalFilename;
+
+      ul.appendChild(li);
+    });
   });
 };
 

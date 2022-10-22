@@ -1,7 +1,10 @@
 const fs = require("fs"),
   path = require("path"),
   staticBasePath = "./public",
-  directoryPath = "C:\\Users\\mike.meloy\\Pictures";
+  directoryPath = "C:\\Users\\mike.meloy\\Pictures",
+  formidable = require("formidable"),
+  uploadDir = path.join(__dirname, "files"),
+  maxFileSize = 50 * 1024 * 1024;
 
 const staticServe = function (req, res) {
   const { url } = req,
@@ -139,18 +142,24 @@ const log = (_, req) => {
 
   req.on("end", () => fs.writeFileSync("logger.txt", logMessage));
 };
-
+/**
+ * Files are saved to /modules/files for now
+ * @param {*} res
+ * @param {*} req
+ */
 const upload = (res, req) => {
-  const requestBody = [];
-  req.on("data", (chunks) => {
-    requestBody.push(chunks);
+  const form = formidable({ multiples: true, maxFileSize, uploadDir });
+
+  form.parse(req, (err, fields, { file }) => {
+    const files = Array.isArray(file) ? file : [file];
+
+    files.forEach((f) => {
+      fs.renameSync(f.filepath, path.join(uploadDir, f.originalFilename));
+    });
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ fields, files }, null, 2));
   });
-  req.on("end", () => {
-    const parsedData = Buffer.concat(requestBody).toString();
-    const username = parsedData.split("=")[1];
-    fs.writeFileSync("username.txt", parsedData);
-  });
-  res.end("");
 };
 
 module.exports = { staticServe };

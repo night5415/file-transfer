@@ -19,6 +19,7 @@
     "electron-icon-builder": "^2.0.1"
   },
   "dependencies": {
+    "formidable": "^2.0.1",
     "qrcode": "^1.5.1"
   }
 }
