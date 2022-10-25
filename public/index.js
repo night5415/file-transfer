@@ -3,7 +3,8 @@ const dataAttUrl = "data-file",
   app = document.getElementById("app"),
   container = document.getElementById("file-list"),
   dwnLoad = document.getElementById("file-download"),
-  input = document.getElementById("file-download-input");
+  input = document.getElementById("file-download-input"),
+  label = document.querySelector(".file-download-input");
 
 const onFileClick = (event) => {
   const { target, clientX, clientY } = event,
@@ -34,6 +35,15 @@ const onFileClick = (event) => {
       logger(e);
     });
 };
+
+const onLabelClick = (event) => {
+  const { target, clientX, clientY } = event,
+    { x, y } = target.getBoundingClientRect();
+
+  createRipple(target, clientX - x, clientY - y);
+};
+
+label.addEventListener("click", onLabelClick);
 
 const onFolderClick = (event) => {
   const { target, clientX, clientY } = event,

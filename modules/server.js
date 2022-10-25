@@ -1,5 +1,6 @@
 const fs = require("fs"),
   path = require("path"),
+  { spawn } = require("child_process"),
   staticBasePath = "./public",
   directoryPath = "C:\\Users\\mike.meloy\\Pictures",
   formidable = require("formidable"),
@@ -156,7 +157,7 @@ const upload = (res, req) => {
     files.forEach((f) => {
       fs.renameSync(f.filepath, path.join(uploadDir, f.originalFilename));
     });
-
+    spawn("explorer", [uploadDir]);
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ fields, files }, null, 2));
   });
