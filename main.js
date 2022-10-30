@@ -10,11 +10,12 @@ const {
   path = require("path"),
   http = require("http"),
   os = require("os"),
+  { WebSocketServer } = require("ws"),
   QRCode = require("qrcode"),
   port = 3000,
   logo =
     "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iYm94X19pY29uIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3NSIgaGVpZ2h0PSI3NSIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwMDAwIj4KCQkJCTxnPgoJCQkJCTxyZWN0IGZpbGw9Im5vbmUiIGhlaWdodD0iMjQiIHdpZHRoPSIyNCIvPgoJCQkJPC9nPgoJCQkJPGc+CgkJCQkJPHBhdGggZD0iTTE4LDE1djNINnYtM0g0djNjMCwxLjEsMC45LDIsMiwyaDEyYzEuMSwwLDItMC45LDItMnYtM0gxOHogTTE3LDExbC0xLjQxLTEuNDFMMTMsMTIuMTdWNGgtMnY4LjE3TDguNDEsOS41OUw3LDExbDUsNSBMMTcsMTF6Ii8+CgkJCQk8L2c+CgkJCTwvc3ZnPg==";
-
+let socket;
 const { staticServe } = require("./modules/server");
 
 function createWindow() {
@@ -32,9 +33,22 @@ function createWindow() {
   mainWindow.loadFile("index.html");
   //progressBar(mainWindow);
 }
+
+function setupWebSocket() {
+  const wss = new WebSocketServer({ port: 8080 });
+  wss.on("connection", function connection(ws) {
+    ws.on("message", function message(data) {
+      console.log("received: %s", data);
+    });
+    ws.send("return");
+    socket = ws;
+  });
+}
+
 app.whenReady().then(() => {
   createWindow();
   setupWebServer();
+  setupWebSocket();
   systemTray();
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -48,25 +62,6 @@ app.on("window-all-closed", function () {
 });
 
 const setupWebServer = () => http.createServer(staticServe).listen(port);
-
-// const progressBar = (win) => {
-//   const INCREMENT = 0.03;
-//   const INTERVAL_DELAY = 100; // ms
-
-//   let c = 0;
-//   progressInterval = setInterval(() => {
-//     // update progress bar to next value
-//     // values between 0 and 1 will show progress, >1 will show indeterminate or stick at 100%
-//     win?.setProgressBar(c);
-
-//     // increment or reset progress bar
-//     if (c < 2) {
-//       c += INCREMENT;
-//     } else {
-//       c = -INCREMENT * 5; // reset to a bit less than 0 to show reset state
-//     }
-//   }, INTERVAL_DELAY);
-// };
 
 const systemTray = () => {
   const icon = nativeImage.createFromDataURL(logo),
@@ -84,6 +79,7 @@ const systemTray = () => {
 };
 
 function createQrCode() {
+  let x = `http://${os.hostname()}.local:${port}`;
   return new Promise((res, rej) => {
     QRCode.toDataURL(
       `http://${os.hostname()}.local:${port}`,
@@ -103,4 +99,6 @@ ipcMain.handle("qr-code", async (event, someArgument) => {
   return await createQrCode();
 });
 
-//./node_modules/.bin/electron-icon-builder --input=./icons/test.png --output=./icons
+ipcMain.handle("send-color", (e, args) => {
+  socket.send(args);
+});

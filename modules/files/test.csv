@@ -1,3 +1,0 @@
-﻿Id,int,NULL,NO
-PaidClaimAdjId,bigint,NULL,YES
-BillingPaymentId,int,NULL,NO

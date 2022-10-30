@@ -6,6 +6,20 @@ const dataAttUrl = "data-file",
   input = document.getElementById("file-download-input"),
   label = document.querySelector(".file-download-input");
 
+const socket = new WebSocket("ws://MMELOY-D4J3.local:8080");
+
+// Connection opened
+socket.addEventListener("open", (event) => {
+  socket.send("Hello Server!");
+});
+
+// Listen for messages
+socket.addEventListener("message", (event) => {
+  console.log("Message from server ", event.data);
+  var r = document.querySelector(":root");
+  r.style.setProperty("--background", event.data);
+});
+
 const onFileClick = (event) => {
   const { target, clientX, clientY } = event,
     { x, y } = target.getBoundingClientRect(),
