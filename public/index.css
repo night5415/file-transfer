@@ -42,6 +42,7 @@ li {
 
 #app {
   height: 100vh;
+  overflow: auto;
   width: 100vw;
   background-color: lightgray;
 }
@@ -129,8 +130,8 @@ div[data-hidden="false"] {
 
 .sub-container {
   display: block;
-  padding-left: 30px;
-  overflow: hidden;
+  overflow: auto;
+  padding-left: 30px; 
   max-height: 0;
   transition: max-height 500ms;
 }
